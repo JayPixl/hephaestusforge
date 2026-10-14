@@ -1,0 +1,17 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "arsmagicalegacy"
+    }
+  ],
+  "type": "hephaestus:casting_basin",
+  "cooling_time": 240,
+  "fluid": {
+    "amount": 810,
+    "id": "hephaestus:molten_moonstone"
+  },
+  "result": {
+    "id": "arsmagicalegacy:moonstone_block"
+  }
+}
