@@ -11,6 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jspecify.annotations.Nullable;
 
 import java.util.HashSet;
@@ -485,6 +487,8 @@ public class SmelteryControllerBlockEntity extends BlockEntity implements MenuPr
             drain.setControllerPos(target);
         if (be instanceof SearedChuteBlockEntity chute && !Objects.equals(chute.getControllerPos(), target))
             chute.setControllerPos(target);
+        if (link && be instanceof IDisplayFluidListener listener)
+            listener.notifyDisplayFluidUpdated(displayFluid);
     }
 
     @SuppressWarnings("removal")
@@ -623,6 +627,32 @@ public class SmelteryControllerBlockEntity extends BlockEntity implements MenuPr
         if (level != null && !level.isClientSide() && isFormed) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
+    }
+
+    @Override
+    public ModelData getModelData() {
+        return ModelData.of(DISPLAY_FLUID, displayFluid);
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ValueInput input) {
+        FluidStack old = displayFluid;
+        super.onDataPacket(net, input);
+        refreshModelIfChanged(old);
+    }
+
+    @Override
+    public void handleUpdateTag(ValueInput input) {
+        FluidStack old = displayFluid;
+        super.handleUpdateTag(input);
+        refreshModelIfChanged(old);
+    }
+
+    private void refreshModelIfChanged(FluidStack old) {
+        if (level == null || !level.isClientSide()) return;
+        if (FluidStack.isSameFluidSameComponents(old, displayFluid)) return;
+        requestModelDataUpdate();
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     @Override

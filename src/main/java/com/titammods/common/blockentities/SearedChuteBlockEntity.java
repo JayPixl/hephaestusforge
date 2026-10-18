@@ -8,6 +8,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.model.data.ModelData;
 import org.jspecify.annotations.Nullable;
 
 public class SearedChuteBlockEntity extends BlockEntity implements IDisplayFluidListener, WorldlyContainer {
@@ -121,6 +123,32 @@ public class SearedChuteBlockEntity extends BlockEntity implements IDisplayFluid
             displayFluid = (f != null && !f.isSame(Fluids.EMPTY)) ? new FluidStack(f, 1000) : FluidStack.EMPTY;
         }
         buffer.set(0, input.read("buffer", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
+    }
+
+    @Override
+    public ModelData getModelData() {
+        return ModelData.of(DISPLAY_FLUID, displayFluid);
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ValueInput input) {
+        FluidStack old = displayFluid;
+        super.onDataPacket(net, input);
+        refreshModelIfChanged(old);
+    }
+
+    @Override
+    public void handleUpdateTag(ValueInput input) {
+        FluidStack old = displayFluid;
+        super.handleUpdateTag(input);
+        refreshModelIfChanged(old);
+    }
+
+    private void refreshModelIfChanged(FluidStack old) {
+        if (level == null || !level.isClientSide()) return;
+        if (FluidStack.isSameFluidSameComponents(old, displayFluid)) return;
+        requestModelDataUpdate();
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider r) { return saveWithoutMetadata(r); }

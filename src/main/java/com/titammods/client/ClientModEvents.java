@@ -21,7 +21,8 @@ import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterFluidModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import com.titammods.common.blockentities.render.SmelteryIORenderer;
+import com.titammods.client.model.FluidTextureModel;
+import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
 import com.titammods.common.blockentities.render.SmelteryControllerRenderer;
 
 public class ClientModEvents {
@@ -45,6 +46,7 @@ public class ClientModEvents {
         modEventBus.addListener(ClientModEvents::onClientSetup);
         modEventBus.addListener(ClientModEvents::onRegisterSpecialModelRenderer);
         modEventBus.addListener(ClientModEvents::onRegisterMenuScreens);
+        modEventBus.addListener(ClientModEvents::onRegisterBlockStateModels);
     }
 
     private static void onRegisterFluidModels(RegisterFluidModelsEvent event) {
@@ -74,6 +76,10 @@ public class ClientModEvents {
         event.register(SearedTankItemRenderer.RENDERER_ID, unbaked.type());
     }
 
+    private static void onRegisterBlockStateModels(RegisterBlockStateModels event) {
+        event.registerModel(FluidTextureModel.ID, FluidTextureModel.Unbaked.CODEC);
+    }
+
     private static void onRegisterMenuScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.MELTER_MENU.get(), com.titammods.client.screen.MelterScreen::new);
         event.register(ModMenus.SMELTERY_MENU.get(), com.titammods.client.screen.SmelteryScreen::new);
@@ -85,8 +91,6 @@ public class ClientModEvents {
                         ModBlockEntities.SEARED_TANK.get(),
                         SearedTankRenderer::new)
         );
-        BlockEntityRenderers.register(ModBlockEntities.SEARED_CHUTE.get(), SmelteryIORenderer::new);
-        BlockEntityRenderers.register(ModBlockEntities.SEARED_DRAIN.get(), SmelteryIORenderer::new);
         BlockEntityRenderers.register(ModBlockEntities.SMELTERY_CONTROLLER.get(), SmelteryControllerRenderer::new);
         event.enqueueWork(() ->
                 BlockEntityRenderers.register(
