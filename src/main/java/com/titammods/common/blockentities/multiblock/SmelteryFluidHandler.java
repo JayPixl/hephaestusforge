@@ -45,11 +45,26 @@ public class SmelteryFluidHandler extends SnapshotJournal<List<FluidStack>> impl
     @Override public long getCapacityAsLong(int index, FluidResource resource) { return capacity; }
     @Override public boolean isValid(int index, FluidResource resource) { return true; }
 
-    // Smeltery drains expose extraction only; internal processing uses the legacy methods below.
     @Override
     public int insert(int index, FluidResource resource, int amount, TransactionContext transaction) {
         TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
-        return 0;
+        return insert(resource, amount, transaction);
+    }
+
+    @Override
+    public int insert(FluidResource resource, int amount, TransactionContext transaction) {
+        TransferPreconditions.checkNonEmptyNonNegative(resource, amount);
+        int inserted = Math.min(amount, capacity - getTotalFluid());
+        if (inserted <= 0) return 0;
+        updateSnapshots(transaction);
+        for (FluidStack f : fluids) {
+            if (resource.matches(f)) {
+                f.grow(inserted);
+                return inserted;
+            }
+        }
+        fluids.add(resource.toStack(inserted));
+        return inserted;
     }
 
     @Override

@@ -22,5 +22,9 @@ public final class ModCapabilities {
                 (basin, side) -> basin.getFluidResourceHandler());
         event.registerBlockEntity(Capabilities.Fluid.BLOCK, ModBlockEntities.SEARED_DRAIN.get(),
                 (drain, side) -> drain.getFluidResourceHandler());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.MELTER.get(),
+                (melter, side) -> melter.getItemResourceHandler());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlockEntities.SEARED_CHUTE.get(),
+                (chute, side) -> chute.getControllerPos() == null ? null : chute.getItemResourceHandler());
     }
 }

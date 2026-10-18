@@ -39,7 +39,26 @@ public class SearedChuteBlockEntity extends BlockEntity implements IDisplayFluid
         super(ModBlockEntities.SEARED_CHUTE.get(), pos, state);
     }
 
-    public void setControllerPos(@Nullable BlockPos pos) { this.controllerPos = pos; setChanged(); }
+    private final TransactionalItemHandler itemResourceHandler = new TransactionalItemHandler(this::getControllerInventory, true, true);
+
+    public void setControllerPos(@Nullable BlockPos pos) {
+        if (java.util.Objects.equals(controllerPos, pos)) return;
+        this.controllerPos = pos;
+        setChanged();
+        invalidateCapabilities();
+    }
+
+    public TransactionalItemHandler getItemResourceHandler() { return itemResourceHandler; }
+
+    @SuppressWarnings("removal")
+    private net.neoforged.neoforge.items.@Nullable IItemHandlerModifiable getControllerInventory() {
+        if (controllerPos == null || level == null || !level.hasChunkAt(controllerPos)) return null;
+        if (level.getBlockEntity(controllerPos) instanceof SmelteryControllerBlockEntity controller
+                && controller.getBlockState().getValue(com.titammods.common.blocks.SmelteryControllerBlock.IN_STRUCTURE)) {
+            return controller.itemHandler;
+        }
+        return null;
+    }
     public @Nullable BlockPos getControllerPos()         { return controllerPos; }
 
     @Override public FluidStack getDisplayFluid() { return displayFluid; }

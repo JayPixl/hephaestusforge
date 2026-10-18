@@ -80,6 +80,10 @@ public class MelterBlockEntity extends BlockEntity implements MenuProvider {
 
     public TransactionalFluidTank getFluidResourceHandler() { return (TransactionalFluidTank) tank; }
 
+    private final TransactionalItemHandler itemResourceHandler = new TransactionalItemHandler(() -> inventory, true, true);
+
+    public TransactionalItemHandler getItemResourceHandler() { return itemResourceHandler; }
+
     protected final ContainerData data = new ContainerData() {
         @Override public int get(int i) {
             return switch (i) {
@@ -105,6 +109,7 @@ public class MelterBlockEntity extends BlockEntity implements MenuProvider {
         super(ModBlockEntities.MELTER.get(), pos, state);
     }
 
+    @SuppressWarnings("removal")
     @Override
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
         super.preRemoveSideEffects(pos, state);
