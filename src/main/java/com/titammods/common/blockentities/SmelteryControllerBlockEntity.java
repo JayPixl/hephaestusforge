@@ -1,5 +1,6 @@
 package com.titammods.common.blockentities;
 
+import com.titammods.common.recipe.HephaestusRecipeCache;
 import com.titammods.common.blockentities.multiblock.IDisplayFluidListener;
 import com.titammods.common.blockentities.multiblock.SmelteryFluidHandler;
 import com.titammods.common.blockentities.multiblock.SmelteryMultiblock;
@@ -208,14 +209,17 @@ public class SmelteryControllerBlockEntity extends BlockEntity implements MenuPr
             }
         }
 
+        FluidStack newFuel;
         if (activeFuel.isEmpty()) {
-            currentFuel = FluidStack.EMPTY;
+            newFuel = FluidStack.EMPTY;
         } else {
             activeFuel.setAmount(totalAmount);
-            currentFuel = activeFuel;
+            newFuel = activeFuel;
         }
+        boolean fuelChanged = !FluidStack.matches(currentFuel, newFuel) || fuelCapacity != totalCapacity;
+        currentFuel = newFuel;
         fuelCapacity = totalCapacity;
-        setChanged();
+        if (fuelChanged) setChanged();
     }
     @SuppressWarnings("removal")
     private void consumeFuelFromTanks() {
@@ -239,15 +243,7 @@ public class SmelteryControllerBlockEntity extends BlockEntity implements MenuPr
     }
 
     private int getTemperatureForFuel(FluidStack fluid) {
-        if (fluid.isEmpty() || !(level instanceof ServerLevel sl)) return 0;
-        int max = 0;
-        for (var h : sl.getServer().getRecipeManager().recipeMap().byType(ModRecipes.MELTING_TYPE.get())) {
-            var recipe = h.value();
-            if (recipe.fuel().getFluid().isSame(fluid.getFluid())) {
-                max = Math.max(max, recipe.temperature());
-            }
-        }
-        return max;
+        return HephaestusRecipeCache.fuelTemperature(level, fluid);
     }
 
     @SuppressWarnings("removal")
@@ -301,13 +297,9 @@ public class SmelteryControllerBlockEntity extends BlockEntity implements MenuPr
                     changed = true;
                 }
             } else {
-                var holder = sl.getServer().getRecipeManager().recipeMap()
-                        .byType(ModRecipes.MELTING_TYPE.get()).stream()
-                        .filter(h -> h.value().input().test(stack))
-                        .findFirst().orElse(null);
+                var recipe = HephaestusRecipeCache.melting(sl, stack);
 
-                if (holder != null) {
-                    var recipe = holder.value();
+                if (recipe != null) {
                     int reqTime = recipe.time();
                     int state   = 0;
                     if (availTemp < recipe.temperature()) {
@@ -345,13 +337,10 @@ public class SmelteryControllerBlockEntity extends BlockEntity implements MenuPr
 
             meltingProgress[i]++;
             if (meltingProgress[i] >= meltingTime[i]) {
-                var holder = sl.getServer().getRecipeManager().recipeMap()
-                        .byType(ModRecipes.MELTING_TYPE.get()).stream()
-                        .filter(h -> h.value().input().test(stack))
-                        .findFirst().orElse(null);
+                var recipe = HephaestusRecipeCache.melting(sl, stack);
 
-                if (holder != null) {
-                    FluidStack out = holder.value().scaledOutput(stack).copy();
+                if (recipe != null) {
+                    FluidStack out = recipe.scaledOutput(stack).copy();
                     if (fluidTank.fill(out, IFluidHandler.FluidAction.SIMULATE) < out.getAmount()) {
                         meltingProgress[i] = meltingTime[i];
                         meltingState[i] = 3;
@@ -372,11 +361,11 @@ public class SmelteryControllerBlockEntity extends BlockEntity implements MenuPr
     private void processAlloying() {
         if (!(level instanceof ServerLevel sl)) return;
         boolean changed = false;
+        int availTemp = temperature > 0 ? temperature : getTemperatureForFuel(currentFuel);
 
         for (var holder : sl.getServer().getRecipeManager().recipeMap()
                 .byType(ModRecipes.ALLOY_TYPE.get())) {
             var recipe = holder.value();
-            int availTemp = temperature > 0 ? temperature : getTemperatureForFuel(currentFuel);
             if (availTemp < recipe.temperature()) continue;
 
             SmelteryFluidHandler simulated = new SmelteryFluidHandler();

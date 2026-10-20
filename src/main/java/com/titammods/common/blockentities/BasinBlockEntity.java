@@ -1,5 +1,6 @@
 package com.titammods.common.blockentities;
 
+import com.titammods.common.recipe.HephaestusRecipeCache;
 import com.titammods.setup.ModBlockEntities;
 import com.titammods.setup.ModRecipes;
 import net.minecraft.core.BlockPos;
@@ -184,25 +185,11 @@ public class BasinBlockEntity extends BlockEntity implements WorldlyContainer {
     }
 
     private ModRecipes.@Nullable CastingBasinRecipe findRecipeByType(ItemStack cast, Fluid fluid) {
-        if (!(level instanceof ServerLevel sl)) return null;
-        Identifier fid = BuiltInRegistries.FLUID.getKey(fluid);
-        for (var holder : sl.getServer().getRecipeManager()
-                .recipeMap().byType(ModRecipes.CASTING_BASIN_TYPE.get())) {
-            ModRecipes.CastingBasinRecipe r = holder.value();
-            if (r.matchesCast(cast) && r.fluidId().equals(fid)) return r;
-        }
-        return null;
+        return HephaestusRecipeCache.basin(level, cast, fluid);
     }
 
     private ModRecipes.@Nullable CastingBasinRecipe findRecipe(ItemStack cast, Fluid fluid, int amount) {
-        if (!(level instanceof ServerLevel sl)) return null;
-        Identifier fid = BuiltInRegistries.FLUID.getKey(fluid);
-        for (var holder : sl.getServer().getRecipeManager()
-                .recipeMap().byType(ModRecipes.CASTING_BASIN_TYPE.get())) {
-            ModRecipes.CastingBasinRecipe r = holder.value();
-            if (r.matchesCast(cast) && r.fluidId().equals(fid) && amount >= r.fluidAmount()) return r;
-        }
-        return null;
+        return HephaestusRecipeCache.basin(level, cast, fluid, amount);
     }
 
     private static final int[] SLOTS_NONE   = new int[0];

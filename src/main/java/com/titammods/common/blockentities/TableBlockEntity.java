@@ -1,5 +1,6 @@
 package com.titammods.common.blockentities;
 
+import com.titammods.common.recipe.HephaestusRecipeCache;
 import com.titammods.setup.ModBlockEntities;
 import com.titammods.setup.ModRecipes;
 import net.minecraft.core.BlockPos;
@@ -229,33 +230,11 @@ public class TableBlockEntity extends BlockEntity implements net.minecraft.world
     }
 
     private ModRecipes.@Nullable CastingTableRecipe findRecipeByType(ItemStack mold, Fluid fluid) {
-        if (!(level instanceof ServerLevel sl)) return null;
-        net.minecraft.resources.Identifier fid = BuiltInRegistries.FLUID.getKey(fluid);
-        for (var holder : sl.getServer().getRecipeManager()
-                .recipeMap().byType(ModRecipes.CASTING_TABLE_TYPE.get())) {
-            ModRecipes.CastingTableRecipe recipe = holder.value();
-            java.util.Optional<net.minecraft.world.item.crafting.Ingredient> cast = recipe.cast();
-            boolean moldMatches = cast.isEmpty() ? mold.isEmpty() : cast.get().test(mold);
-            if (moldMatches && recipe.fluidId().equals(fid)) {
-                return recipe;
-            }
-        }
-        return null;
+        return HephaestusRecipeCache.table(level, mold, fluid);
     }
 
     private ModRecipes.@Nullable CastingTableRecipe findRecipe(ItemStack mold, Fluid fluid, int amount) {
-        if (!(level instanceof ServerLevel sl)) return null;
-        net.minecraft.resources.Identifier fid = BuiltInRegistries.FLUID.getKey(fluid);
-        for (var holder : sl.getServer().getRecipeManager()
-                .recipeMap().byType(ModRecipes.CASTING_TABLE_TYPE.get())) {
-            ModRecipes.CastingTableRecipe recipe = holder.value();
-            java.util.Optional<net.minecraft.world.item.crafting.Ingredient> cast = recipe.cast();
-            boolean moldMatches = cast.isEmpty() ? mold.isEmpty() : cast.get().test(mold);
-            if (moldMatches && recipe.fluidId().equals(fid) && amount >= recipe.fluidAmount()) {
-                return recipe;
-            }
-        }
-        return null;
+        return HephaestusRecipeCache.table(level, mold, fluid, amount);
     }
     @SuppressWarnings("removal")
     @Override

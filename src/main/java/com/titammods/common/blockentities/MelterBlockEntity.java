@@ -1,5 +1,6 @@
 package com.titammods.common.blockentities;
 
+import com.titammods.common.recipe.HephaestusRecipeCache;
 import com.titammods.common.blocks.MelterBlock;
 import com.titammods.common.blocks.SearedMachineBlock;
 import com.titammods.menu.MelterMenu;
@@ -187,15 +188,7 @@ public class MelterBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private int getTemperatureForFuel(FluidStack fluid, Level level) {
-        if (fluid.isEmpty()) return 0;
-        int maxTemp = 0;
-        for (var holder : ((net.minecraft.server.level.ServerLevel) level).getServer().getRecipeManager().recipeMap().byType(ModRecipes.MELTING_TYPE.get())) {
-            ModRecipes.MeltingRecipe recipe = holder.value();
-            if (recipe.fuel().getFluid().isSame(fluid.getFluid())) {
-                maxTemp = Math.max(maxTemp, recipe.temperature());
-            }
-        }
-        return maxTemp;
+        return HephaestusRecipeCache.fuelTemperature(level, fluid);
     }
     @SuppressWarnings("removal")
     private @Nullable FluidTank getFuelTankBelow(Level level, BlockPos pos) {
@@ -228,15 +221,12 @@ public class MelterBlockEntity extends BlockEntity implements MenuProvider {
                 continue;
             }
 
-            var recipeHolder = ((net.minecraft.server.level.ServerLevel) level).getServer().getRecipeManager()
-                    .getRecipeFor(ModRecipes.MELTING_TYPE.get(), new SingleRecipeInput(stack), level)
-                    .orElse(null);
-            if (recipeHolder == null) {
+            ModRecipes.MeltingRecipe recipe = HephaestusRecipeCache.melting(level, stack);
+            if (recipe == null) {
                 if (this.state[i] != 3) { progress[i] = 0; maxProgress[i] = 100; this.state[i] = 3; dirty = true; }
                 continue;
             }
 
-            ModRecipes.MeltingRecipe recipe = recipeHolder.value();
             if (maxProgress[i] != recipe.time()) { maxProgress[i] = recipe.time(); dirty = true; }
 
             if (recipe.temperature() > availableHeat) {
