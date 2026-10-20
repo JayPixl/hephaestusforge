@@ -15,6 +15,7 @@ public class SmelteryMultiblock {
 
     private final Level level;
     private final BlockPos controllerPos;
+    private static final int MAX_SIDE = 15;
 
     public boolean isValid       = false;
     public BlockPos minInner;
@@ -59,10 +60,18 @@ public class SmelteryMultiblock {
         int minX = floorCenter.getX(), maxX = floorCenter.getX();
         int minZ = floorCenter.getZ(), maxZ = floorCenter.getZ();
 
-        while (minX > floorCenter.getX() - 7 && isInnerBlock(level.getBlockState(new BlockPos(minX - 1, floorY + 1, floorCenter.getZ())))) minX--;
-        while (maxX < floorCenter.getX() + 7 && isInnerBlock(level.getBlockState(new BlockPos(maxX + 1, floorY + 1, floorCenter.getZ())))) maxX++;
-        while (minZ > floorCenter.getZ() - 7 && isInnerBlock(level.getBlockState(new BlockPos(floorCenter.getX(), floorY + 1, minZ - 1)))) minZ--;
-        while (maxZ < floorCenter.getZ() + 7 && isInnerBlock(level.getBlockState(new BlockPos(floorCenter.getX(), floorY + 1, maxZ + 1)))) maxZ++;
+        //The block behind the controller is added to each side
+        int xBlocks = 1;
+        int yBlocks = 1;
+
+        //Check at most MAX_SIDE blocks in each direction for valid floor
+        while(xBlocks <= MAX_SIDE && isInnerBlock(level.getBlockState(new BlockPos(minX - 1, floorY + 1, floorCenter.getZ())))) {xBlocks++; minX--;}
+        while(xBlocks <= MAX_SIDE && isInnerBlock(level.getBlockState(new BlockPos(maxX + 1, floorY + 1, floorCenter.getZ())))) {xBlocks++; maxX++;}
+        //Early return if more than MAX_SIDE blocks are found in total
+        if(xBlocks > MAX_SIDE) return;
+        while (yBlocks <= MAX_SIDE && isInnerBlock(level.getBlockState(new BlockPos(floorCenter.getX(), floorY + 1, minZ - 1)))) {yBlocks++; minZ--;}
+        while (yBlocks <= MAX_SIDE && isInnerBlock(level.getBlockState(new BlockPos(floorCenter.getX(), floorY + 1, maxZ + 1)))) {yBlocks++; maxZ++;}
+        if(yBlocks > MAX_SIDE) return;
 
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
