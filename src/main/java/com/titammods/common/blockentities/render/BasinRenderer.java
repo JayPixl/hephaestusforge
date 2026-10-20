@@ -49,7 +49,7 @@ public class BasinRenderer implements BlockEntityRenderer<BasinBlockEntity, Basi
         ItemStack output = blockEntity.inventory.getStackInSlot(BasinBlockEntity.OUTPUT);
         ItemStack cast   = blockEntity.inventory.getStackInSlot(BasinBlockEntity.CAST);
         state.fluid        = blockEntity.tank.getFluid().copy();
-        state.tankCapacity = blockEntity.tank.getCapacity();
+        state.tankCapacity = blockEntity.fillTarget > 0 ? blockEntity.fillTarget : blockEntity.tank.getCapacity();
         state.isAnimating  = blockEntity.renderTimer > 0;
 
         var level = Minecraft.getInstance().level;

@@ -40,6 +40,7 @@ public class BasinBlockEntity extends BlockEntity implements WorldlyContainer {
     public int coolingTime  = 0;
     public int renderTimer  = 0;
     public int ejectCooldown = 0;
+    public int fillTarget    = 0;
 
     @Override
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
@@ -66,7 +67,7 @@ public class BasinBlockEntity extends BlockEntity implements WorldlyContainer {
     };
 
     @SuppressWarnings("removal")
-    public final FluidTank tank = new TransactionalFluidTank(900, true, false) {
+    public final FluidTank tank = new TransactionalFluidTank(10000, true, false) {
 
         @Override
         public int fill(FluidStack resource, IFluidHandler.FluidAction action) {
@@ -77,6 +78,7 @@ public class BasinBlockEntity extends BlockEntity implements WorldlyContainer {
             ModRecipes.@Nullable CastingBasinRecipe recipe =
                     findRecipeByType(inventory.getStackInSlot(CAST), resource.getFluid());
             if (recipe == null) return 0;
+            fillTarget = recipe.fluidAmount();
 
             int spaceLeft = recipe.fluidAmount() - fluid.getAmount();
             if (spaceLeft <= 0) return 0;
@@ -232,6 +234,7 @@ public class BasinBlockEntity extends BlockEntity implements WorldlyContainer {
         output.putInt("coolingTime",   coolingTime);
         output.putInt("renderTimer",    renderTimer);
         output.putInt("ejectCooldown",  ejectCooldown);
+        output.putInt("fillTarget",     fillTarget);
         output.store("slot0",          ItemStack.OPTIONAL_CODEC, inventory.getStackInSlot(OUTPUT));
         output.store("cast",           ItemStack.OPTIONAL_CODEC, inventory.getStackInSlot(CAST));
         output.store("tank",           FluidStack.OPTIONAL_CODEC, tank.getFluid());
@@ -243,6 +246,7 @@ public class BasinBlockEntity extends BlockEntity implements WorldlyContainer {
         coolingTime   = input.getIntOr("coolingTime",  0);
         renderTimer   = input.getIntOr("renderTimer",   0);
         ejectCooldown = input.getIntOr("ejectCooldown", 0);
+        fillTarget    = input.getIntOr("fillTarget",    0);
         inventory.setStackInSlot(OUTPUT, input.read("slot0", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
         inventory.setStackInSlot(CAST, input.read("cast", ItemStack.OPTIONAL_CODEC).orElse(ItemStack.EMPTY));
         tank.setFluid(input.read("tank", FluidStack.OPTIONAL_CODEC).orElse(FluidStack.EMPTY));
