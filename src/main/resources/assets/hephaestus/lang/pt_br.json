@@ -505,5 +505,8 @@
   "jade.hephaestus.melting_entry": "%s %s%%",
   "jade.hephaestus.melting_more": "+%s mais…",
   "config.jade.plugin_hephaestus.smeltery_progress": "Progresso de derretimento da Fundição",
-  "config.jade.plugin_hephaestus.melter_progress": "Progresso de derretimento do Fundidor"
+  "config.jade.plugin_hephaestus.melter_progress": "Progresso de derretimento do Fundidor",
+  "fluid_type.hephaestus.molten_replica": "Réplica Derretida",
+  "item.hephaestus.molten_replica_bucket": "Balde de Réplica Derretida",
+  "block.hephaestus.molten_replica_block": "Réplica Derretida"
 }
