@@ -297,6 +297,7 @@ public class ModModelProvider implements DataProvider {
         JsonObject model = new JsonObject();
         model.addProperty("type", "neoforge:fluid_container");
         model.addProperty("fluid", TitamMods.MODID + ":" + fluidRegistryName);
+        model.addProperty("apply_fluid_luminosity", false);
         JsonObject textures = new JsonObject();
         textures.addProperty("base",     "minecraft:item/bucket");
         textures.addProperty("fluid",    "neoforge:item/mask/bucket_fluid");
