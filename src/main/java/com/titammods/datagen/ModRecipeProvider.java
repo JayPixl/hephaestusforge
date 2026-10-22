@@ -84,6 +84,7 @@ public class ModRecipeProvider extends RecipeProvider {
         registerNodeworksCompat();
         registerOccultismCompat();
         registerOritechCompat();
+        registerReplicationCompat();
         registerStellarisCompat();
         registerThaumaturgeCompat();
         registerXyCraftWorldCompat();
@@ -678,6 +679,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 null, null, null, null, null, prefix, cond);
         registerGem(moltenId(HephaestusFluids.Material.MOLTEN_FLUXITE), 1000, "fluxite",
                 id(mod, "fluxite_block"), id(mod, "fluxite"), prefix, cond);
+    }
+
+    private void registerReplicationCompat() {
+        ICondition cond = new ModLoadedCondition("replication");
+        String mod = "replication", prefix = "replication_compat/";
+
+        registerMetal(moltenId(HephaestusFluids.Material.MOLTEN_REPLICA), 1000, "replica",
+                id(mod, "replica_block"), id(mod, "replica_ingot"), id(mod, "raw_replica"),
+                null, null, null, null, null, prefix, cond);
     }
 
     private void registerStellarisCompat() {

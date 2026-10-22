@@ -92,6 +92,7 @@ public class HephaestusFluids {
         MOLTEN_CELESTINE              ("celestine",              0xFFC5CFF2,  800, "nodeworks"),
         MOLTEN_OLIVINE                ("olivine",                0xFF6A8528,  800),
         MOLTEN_DIMENSIONAL_SHARD      ("dimensional_shard",      0xFF93BCC7, 1000),
+        MOLTEN_REPLICA                ("replica",                0xFF5A6E80, 1000, "replication", "fluid/molten/replica"),
         MOLTEN_HEAVY_CORE      ("heavy_core",        0xFF636776, 2000),
         MOLTEN_GLOWSTONE       ("glowstone",         0xFFFBDA74,  800),
         MOLTEN_REDSTONE        ("redstone",          0xFFA41808,  600),
@@ -113,16 +114,22 @@ public class HephaestusFluids {
         public final int    color;
         public final int    temperature;
         public final String requiredMod;
+        public final String texture;
 
         Material(String name, int color, int temperature) {
             this(name, color, temperature, null);
         }
 
         Material(String name, int color, int temperature, String requiredMod) {
+            this(name, color, temperature, requiredMod, null);
+        }
+
+        Material(String name, int color, int temperature, String requiredMod, String texture) {
             this.name        = name;
             this.color       = color;
             this.temperature = temperature;
             this.requiredMod = requiredMod;
+            this.texture     = texture;
         }
 
         public boolean isEnabled() {
@@ -135,7 +142,7 @@ public class HephaestusFluids {
     public static void registerFluids() {
         for (Material mat : Material.values()) {
             if (!mat.isEnabled()) continue;
-            SETS.put(mat, new MoltenFluidSet(mat.name, mat.color, mat.temperature));
+            SETS.put(mat, new MoltenFluidSet(mat.name, mat.texture == null ? mat.color : 0xFFFFFFFF, mat.temperature));
         }
     }
 }

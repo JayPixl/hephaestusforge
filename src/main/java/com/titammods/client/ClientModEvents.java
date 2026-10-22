@@ -53,6 +53,13 @@ public class ClientModEvents {
         for (HephaestusFluids.Material mat : HephaestusFluids.Material.values()) {
             MoltenFluidSet set = HephaestusFluids.SETS.get(mat);
             if (set == null) continue;
+            if (mat.texture != null) {
+                event.register(new FluidModel.Unbaked(
+                        new Material(Identifier.fromNamespaceAndPath(TitamMods.MODID, mat.texture + "/still")),
+                        new Material(Identifier.fromNamespaceAndPath(TitamMods.MODID, mat.texture + "/flowing")),
+                        null, null), set.source, set.flowing);
+                continue;
+            }
             event.register(MOLTEN_METAL_MODEL, set.source, set.flowing);
         }
         registerModFluid(event, ModFluids.MOLTEN_COBALT,   "fluid/molten/ore/cobalt");
