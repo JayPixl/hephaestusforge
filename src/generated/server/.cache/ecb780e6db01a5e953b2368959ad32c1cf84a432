@@ -1,4 +1,4 @@
-// 26.1.2	2026-10-14T11:01:42.2146092	hephaestus recipes
+// 26.1.2	2026-10-22T18:41:44.9815169	hephaestus recipes
 371560adf3887729d8033475aeece05cb5addb4a data/hephaestus/advancement/recipes/misc/clear_glass.json
 2be6223ab48b7588c625c7ff1e50f83ee9003ec4 data/hephaestus/advancement/recipes/misc/clear_stained_glass.json
 1f1cc550746b01526ba38f599f42ba000f895ee4 data/hephaestus/advancement/recipes/misc/clear_tinted_glass.json
@@ -212,6 +212,7 @@ c5be8c93a2504a1266c65575ff24d7471ccba159 data/hephaestus/recipe/smeltery/casting
 e68ee765dee24b7fd8945316280d2a0b2ff8f411 data/hephaestus/recipe/smeltery/casting/basin/oritech_compat/gem/fluxite/block_cast.json
 107876a4cebcaa8f79aa74dd10327046c1b2d0a9 data/hephaestus/recipe/smeltery/casting/basin/oritech_compat/metal/adamant/block_cast.json
 e3825b7dd321abd346d3531322a36debdd2d2b16 data/hephaestus/recipe/smeltery/casting/basin/oritech_compat/metal/duratium/block_cast.json
+312dc78ba57f9b8a8b10375a1c70730c1947240b data/hephaestus/recipe/smeltery/casting/basin/replication_compat/metal/replica/block_cast.json
 99210294f5ecaff67765d416ef2dc073c4a89b71 data/hephaestus/recipe/smeltery/casting/basin/smeltery_controller.json
 6252ca7a337cb5c8b5552bcc8673fc2a95f414b2 data/hephaestus/recipe/smeltery/casting/basin/stellaris_compat/metal/desh/block_cast.json
 cb55267f71a8f6572e35e11ea62f6d98b63e0e34 data/hephaestus/recipe/smeltery/casting/basin/thaumaturge_compat/metal/thaumium/block_cast.json
@@ -513,6 +514,7 @@ b013810ef64d6865d376ca9fb82435781bb5f0d8 data/hephaestus/recipe/smeltery/casting
 2287e1f81b9cc2c000fc96081b7e7b0cff968d2f data/hephaestus/recipe/smeltery/casting/table/oritech_compat/metal/adamant/ingot_cast.json
 2932ca5d37823262f517e12accf60fe65a401b4b data/hephaestus/recipe/smeltery/casting/table/oritech_compat/metal/duratium/ingot_cast.json
 edec7a47a5d7366bfb8a6a2cd12285946add9ca2 data/hephaestus/recipe/smeltery/casting/table/oritech_compat/metal/prometheum/ingot_cast.json
+265154ce96c226b9cb9fff466b3831e208fc3d53 data/hephaestus/recipe/smeltery/casting/table/replication_compat/metal/replica/ingot_cast.json
 e71db68f4c935a9210cdeeb08dc846c354a11a4f data/hephaestus/recipe/smeltery/casting/table/stellaris_compat/metal/desh/ingot_cast.json
 02a76beb7ebaa851196cc696fd94945db85b156e data/hephaestus/recipe/smeltery/casting/table/thaumaturge_compat/metal/thaumium/ingot_cast.json
 65f0ba923a93f77924bdaf3046aa469b9e5099cd data/hephaestus/recipe/smeltery/casting/table/thaumaturge_compat/metal/thaumium/nugget_cast.json
@@ -1052,6 +1054,10 @@ cf93e32996590f63386260c77bcc837a71de3f5c data/hephaestus/recipe/smeltery/melting
 22144a879780be9a7ebcc88450eda1447fad5ffc data/hephaestus/recipe/smeltery/melting/oritech_compat/metal/duratium/block.json
 3bf9e701f6f644ef08d742d6655deb544d647711 data/hephaestus/recipe/smeltery/melting/oritech_compat/metal/duratium/ingot.json
 4f13675afe864eeb728a44087bd86f1b83305546 data/hephaestus/recipe/smeltery/melting/oritech_compat/metal/prometheum/ingot.json
+12bc581a2ce2238cf142ba6882739910b24a0f9c data/hephaestus/recipe/smeltery/melting/replication_compat/metal/replica/block.json
+baa1ce679c7317b27ccaf567271e5e5bdb7a3945 data/hephaestus/recipe/smeltery/melting/replication_compat/metal/replica/ingot.json
+dec1118dfcdbbc69c7e55d30c7d851cb8185690f data/hephaestus/recipe/smeltery/melting/replication_compat/metal/replica/raw.json
+74c0be28ecfb99d54b9249aecd6fc788ae0725a8 data/hephaestus/recipe/smeltery/melting/replication_compat/metal/replica/raw_block.json
 a2bbb79dc6ecd3d75becb12c43bc891661838880 data/hephaestus/recipe/smeltery/melting/stellaris_compat/metal/desh/block.json
 b200b1cf514c7482400f846b2ac22feb917dc68e data/hephaestus/recipe/smeltery/melting/stellaris_compat/metal/desh/ingot.json
 0bf73c54db6a1dd7388159ec6c0966d564494159 data/hephaestus/recipe/smeltery/melting/thaumaturge_compat/metal/thaumium/block.json
